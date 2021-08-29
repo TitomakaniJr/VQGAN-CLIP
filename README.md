@@ -207,15 +207,14 @@ python generate.py -h
 ```
 
 ```sh
-usage: generate.py [-h] [-p PROMPTS] [-ip IMAGE_PROMPTS] [-i MAX_ITERATIONS] [-se DISPLAY_FREQ]
-[-s SIZE SIZE] [-ii INIT_IMAGE] [-in INIT_NOISE] [-iw INIT_WEIGHT] [-m CLIP_MODEL]
-[-conf VQGAN_CONFIG] [-ckpt VQGAN_CHECKPOINT] [-nps [NOISE_PROMPT_SEEDS ...]]
-[-npw [NOISE_PROMPT_WEIGHTS ...]] [-lr STEP_SIZE] [-cuts CUTN] [-cutp CUT_POW] [-sd SEED]
-[-opt {Adam,AdamW,Adagrad,Adamax,DiffGrad,AdamP,RAdam,RMSprop}] [-o OUTPUT] [-vid] [-zvid]
-[-zs ZOOM_START] [-zse ZOOM_FREQUENCY] [-zsc ZOOM_SCALE] [-cpe PROMPT_FREQUENCY]
-[-vl VIDEO_LENGTH] [-ofps OUTPUT_VIDEO_FPS] [-ifps INPUT_VIDEO_FPS] [-d]
-[-aug {Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} [{Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} ...]]
-[-cd CUDA_DEVICE]
+usage: generate.py [-h] [-p PROMPTS] [-ip IMAGE_PROMPTS] [-rp] [-ppfn] [-i MAX_ITERATIONS] [-se DISPLAY_FREQ] [-ow]
+                   [-s SIZE SIZE] [-ii INIT_IMAGE] [-in INIT_NOISE] [-iw INIT_WEIGHT] [-m CLIP_MODEL]
+                   [-conf VQGAN_CONFIG] [-ckpt VQGAN_CHECKPOINT] [-nps [NOISE_PROMPT_SEEDS ...]]
+                   [-npw [NOISE_PROMPT_WEIGHTS ...]] [-lr STEP_SIZE] [-cuts CUTN] [-cutp CUT_POW] [-sd SEED]
+                   [-opt {Adam,AdamW,Adagrad,Adamax,DiffGrad,AdamP,RAdam,RMSprop}] [-o OUTPUT] [-vid] [-zvid]
+                   [-zs ZOOM_START] [-zse ZOOM_FREQUENCY] [-zsc ZOOM_SCALE] [-cpe PROMPT_FREQUENCY] [-vl VIDEO_LENGTH]
+                   [-ofps OUTPUT_VIDEO_FPS] [-ifps INPUT_VIDEO_FPS] [-d]
+                   [-aug {Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} [{Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} ...]] [-cd CUDA_DEVICE]
 ```
 
 ```sh
@@ -227,6 +226,8 @@ optional arguments:
                         Image prompts / target image
   -rp, --random_prompts
                         Randomize text prompts
+  -ppfn, --append_prompt_filename
+                        Prepend the prompt to the filename
   -i MAX_ITERATIONS, --iterations MAX_ITERATIONS
                         Number of iterations
   -se DISPLAY_FREQ, --save_every DISPLAY_FREQ

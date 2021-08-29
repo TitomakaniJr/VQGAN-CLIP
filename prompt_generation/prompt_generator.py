@@ -15,9 +15,10 @@ templates_filename = 'templates.txt'
 actors = []
 actors_dir = "actors\\"
 actor_files = [
-    'batman.txt',
+    'marvel_main.txt',
+    'simpsons.txt',
     'spongebob.txt',
-    'starwars.txt'
+    'starwars_main.txt'
 ]
 
 adjectives = []

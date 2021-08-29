@@ -60,7 +60,8 @@ vq_parser = argparse.ArgumentParser(description='Image generation using VQGAN+CL
 # Add the arguments
 vq_parser.add_argument("-p",    "--prompts", type=str, help="Text prompts", default=None, dest='prompts')
 vq_parser.add_argument("-ip",   "--image_prompts", type=str, help="Image prompts / target image", default=[], dest='image_prompts')
-vq_parser.add_argument("-rp",    "--random_prompts", action='store_true', help="Randomize text prompts", default=None, dest='random_prompts')
+vq_parser.add_argument("-rp",   "--random_prompts", action='store_true', help="Randomize text prompts", default=None, dest='random_prompts')
+vq_parser.add_argument("-ppfn", "--append_prompt_filename", action='store_true', help="Prepend the prompt to the filename", default=None, dest='prepend_prompt_filename')
 vq_parser.add_argument("-i",    "--iterations", type=int, help="Number of iterations", default=500, dest='max_iterations')
 vq_parser.add_argument("-se",   "--save_every", type=int, help="Save image iterations", default=50, dest='display_freq')
 vq_parser.add_argument("-ow",   "--overwrite", action='store_false', help="Overwrite previous image iterations", dest='overwrite')
@@ -128,6 +129,30 @@ if args.random_prompts:
     else:
         # place the random prompt into the prompt phrase array
         all_phrases[0].append(random_prompt)
+     
+current_directory = os.getcwd()
+folders = args.output.split('\\')
+filename = folders.pop(-1)
+   
+if args.prepend_prompt_filename:
+    # Prepend the filename with the entire prompt
+    joined_filename = ''
+    for prompt in all_phrases[0]:
+        if not joined_filename == '':
+            joined_filename = joined_filename + '_'
+        joined_filename = joined_filename + prompt.replace('.', '').replace('|', '')
+    
+    filename = joined_filename + '_' + filename
+
+for folder in folders:
+    current_directory = current_directory + '\\' + folder
+    if not os.path.exists(current_directory):
+        os.mkdir(current_directory)
+
+filename = current_directory + "\\" + filename
+if not args.overwrite:
+    split_output = filename.split('.')
+    filename = split_output[0] + '_' + str(i) +  '.' + split_output[1]
 
 # Split target images using the pipe character (weights are split later)
 if args.image_prompts:
@@ -572,21 +597,6 @@ def checkin(i, losses):
     out = synth(z)
     info = PngImagePlugin.PngInfo()
     info.add_text('comment', f'{args.prompts}')
-    
-    current_directory = os.getcwd()
-    folders = args.output.split('\\')
-    filename = folders.pop(-1)
-    
-    for folder in folders:
-        current_directory = current_directory + '\\' + folder
-        if not os.path.exists(current_directory):
-            os.mkdir(current_directory)
-    
-    filename = current_directory + "\\" + filename
-    if not args.overwrite:
-        split_output = filename.split('.')
-        filename = split_output[0] + '_' + str(i) +  '.' + split_output[1]
-    
     TF.to_pil_image(out[0].cpu()).save(filename, pnginfo=info)
 
 

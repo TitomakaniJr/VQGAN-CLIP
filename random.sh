@@ -5,7 +5,7 @@ TIMESTAMP=`date +%Y-%m-%d_%H-%M-%S`
 # Generate some images
 for number in {1..50}
 do
-   python generate.py -rp -o Output\\Random\\"$TIMESTAMP\\$number".png
+   python generate.py -rp -o Output\\Random\\"$TIMESTAMP\\$number".png -ppfn
 done
 
 
