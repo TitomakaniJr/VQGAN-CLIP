@@ -184,6 +184,11 @@ Use `random.sh` to make a batch of images from random text. Edit the text and nu
 ./random.sh
 ```
 
+## Random Idea Generator
+
+Prompts can include world type tokens which will be parsed and replaced with valid words from a user defined dataset.
+Using -rp you can also add a randomly generated prompt
+
 ## Advanced options
 
 To view the available options, use "-h".
@@ -211,12 +216,15 @@ optional arguments:
                         Text prompts
   -ip IMAGE_PROMPTS, --image_prompts IMAGE_PROMPTS
                         Image prompts / target image
+  -rp, --random_prompts
+                        Randomize text prompts
   -i MAX_ITERATIONS, --iterations MAX_ITERATIONS
                         Number of iterations
   -se DISPLAY_FREQ, --save_every DISPLAY_FREQ
                         Save image iterations
+  -ow, --overwrite      Overwrite previous image iterations
   -s SIZE SIZE, --size SIZE SIZE
-                        Image size (width height) (default: [512, 512])
+                        Image size (width height) (default: [318, 318])
   -ii INIT_IMAGE, --init_image INIT_IMAGE
                         Initial image
   -in INIT_NOISE, --init_noise INIT_NOISE
@@ -241,7 +249,7 @@ optional arguments:
                         Cut power
   -sd SEED, --seed SEED
                         Seed
-  -opt, --optimiser {Adam,AdamW,Adagrad,Adamax,DiffGrad,AdamP,RAdam,RMSprop}
+  -opt {Adam,AdamW,Adagrad,Adamax,DiffGrad,AdamP,RAdam,RMSprop}, --optimiser {Adam,AdamW,Adagrad,Adamax,DiffGrad,AdamP,RAdam,RMSprop}
                         Optimiser
   -o OUTPUT, --output OUTPUT
                         Output file
@@ -262,7 +270,7 @@ optional arguments:
   -ifps INPUT_VIDEO_FPS, --input_video_fps INPUT_VIDEO_FPS
                         When creating an interpolated video, use this as the input fps to interpolate from (>0 & <ofps)
   -d, --deterministic   Enable cudnn.deterministic?
-  -aug, --augments {Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} [{Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} ...]
+  -aug {Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} [{Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} ...], --augments {Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} [{Ji,Sh,Gn,Pe,Ro,Af,Et,Ts,Cr,Er,Re} ...]
                         Enabled augments
   -cd CUDA_DEVICE, --cuda_device CUDA_DEVICE
                         Cuda device to use

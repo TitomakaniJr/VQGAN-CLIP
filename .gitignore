@@ -6,6 +6,7 @@ CLIP/
 taming-transformers/
 taming/
 checkpoints/
+Output/
 
 # Editor
 .vscode/

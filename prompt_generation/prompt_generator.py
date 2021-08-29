@@ -6,6 +6,12 @@ import os
 templates = []
 templates_filename = 'templates.txt'
 
+# Below is all the data needed to parse the different word types
+# {type}s - The object that will hold all data parsed from the given files
+# {type}s_dir - The directory where all the files of a given word type are stored
+# {type}_files - A list of files which should be parsed for the word type. With this you can create your own word files
+# and control exactly what dataset you want to include during generation. Files should have a single entry on each line
+
 actors = []
 actors_dir = "actors\\"
 actor_files = [
@@ -62,10 +68,11 @@ def InitGenerator():
     ReadWordList(times_dir, time_files, times)
     ReadWordList(verbs_dir, verb_files, verbs)
 
-def GenerateIdea():
-    idea = ParseSentence(random.choice(templates))
-    return idea
+def GeneratePrompt():
+    prompt = ParseSentence(random.choice(templates))
+    return prompt
 
+# Parse a given sentence, replacing any prompt tokens with valid data
 def ParseSentence(sentence):
     output = ''
     
@@ -73,6 +80,7 @@ def ParseSentence(sentence):
         if not output == '':
             output += ' '
             
+        # Replace word type tokens with valid data
         if word == 'ACTOR':
             output += random.choice(actors)
         elif word == 'ADJECTIVE':
@@ -91,7 +99,8 @@ def ParseSentence(sentence):
             output += word
 
     return output
-    
+
+# Parse all world lists for a given word type
 def ReadWordList(file_dir, filenames, list):
     for filename in filenames:
         with open(GetLocalPath(os.path.join(file_dir, filename)), 'r') as f:
@@ -99,6 +108,7 @@ def ReadWordList(file_dir, filenames, list):
                 word = line.strip()
                 list.append(word)
             
+# Parse all random templates
 def ReadTemplates(filename):
     with open(GetLocalPath(filename), 'r') as f:
         for line in f:
@@ -110,7 +120,7 @@ def GetLocalPath(filename):
     
 if __name__ == '__main__':
     InitGenerator()
-    GenerateIdea()
+    GeneratePrompt()
     
     
     

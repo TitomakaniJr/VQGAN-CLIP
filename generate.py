@@ -17,8 +17,8 @@ from omegaconf import OmegaConf
 from taming.models import cond_transformer, vqgan
 #import taming.modules 
 
-sys.path.append('idea_generation')
-from idea_generation import idea_generator
+sys.path.append('prompt_generation')
+from prompt_generation import prompt_generator
 
 import torch
 from torch import nn, optim
@@ -103,7 +103,7 @@ if not args.augments:
 
 if args.prompts or args.random_prompts:
     all_phrases = []
-    idea_generator.InitGenerator()
+    prompt_generator.InitGenerator()
 
 # Split text prompts using the pipe character (weights are split later)
 if args.prompts:
@@ -112,14 +112,14 @@ if args.prompts:
     
     # Make a list of all phrases
     for phrase in story_phrases:
-        phrase = idea_generator.ParseSentence(phrase)
+        phrase = prompt_generator.ParseSentence(phrase)
         all_phrases.append(phrase.split("|"))
     
     # First phrase
     args.prompts = all_phrases[0]
 
 if args.random_prompts:
-    random_prompt = idea_generator.GenerateIdea()
+    random_prompt = prompt_generator.GeneratePrompt()
     
     if not args.prompts:
         # setup the random phrase
