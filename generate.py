@@ -17,6 +17,9 @@ from omegaconf import OmegaConf
 from taming.models import cond_transformer, vqgan
 #import taming.modules 
 
+sys.path.append('idea_generation')
+from idea_generation import idea_generator
+
 import torch
 from torch import nn, optim
 from torch.nn import functional as F
@@ -57,8 +60,10 @@ vq_parser = argparse.ArgumentParser(description='Image generation using VQGAN+CL
 # Add the arguments
 vq_parser.add_argument("-p",    "--prompts", type=str, help="Text prompts", default=None, dest='prompts')
 vq_parser.add_argument("-ip",   "--image_prompts", type=str, help="Image prompts / target image", default=[], dest='image_prompts')
+vq_parser.add_argument("-rp",    "--random_prompts", action='store_true', help="Randomize text prompts", default=None, dest='random_prompts')
 vq_parser.add_argument("-i",    "--iterations", type=int, help="Number of iterations", default=500, dest='max_iterations')
 vq_parser.add_argument("-se",   "--save_every", type=int, help="Save image iterations", default=50, dest='display_freq')
+vq_parser.add_argument("-ow",   "--overwrite", action='store_false', help="Overwrite previous image iterations", dest='overwrite')
 vq_parser.add_argument("-s",    "--size", nargs=2, type=int, help="Image size (width height) (default: %(default)s)", default=[default_image_size,default_image_size], dest='size')
 vq_parser.add_argument("-ii",   "--init_image", type=str, help="Initial image", default=None, dest='init_image')
 vq_parser.add_argument("-in",   "--init_noise", type=str, help="Initial noise image (pixels or gradient)", default=None, dest='init_noise')
@@ -96,19 +101,34 @@ if args.cudnn_determinism:
 if not args.augments:
    args.augments = [['Af', 'Pe', 'Ji', 'Er']]
 
+if args.prompts or args.random_prompts:
+    all_phrases = []
+    idea_generator.InitGenerator()
+
 # Split text prompts using the pipe character (weights are split later)
 if args.prompts:
     # For stories, there will be many phrases
     story_phrases = [phrase.strip() for phrase in args.prompts.split("^")]
     
     # Make a list of all phrases
-    all_phrases = []
     for phrase in story_phrases:
+        phrase = idea_generator.ParseSentence(phrase)
         all_phrases.append(phrase.split("|"))
     
     # First phrase
     args.prompts = all_phrases[0]
+
+if args.random_prompts:
+    random_prompt = idea_generator.GenerateIdea()
     
+    if not args.prompts:
+        # setup the random phrase
+        all_phrases.append([random_prompt])
+        args.prompts = all_phrases[0]
+    else:
+        # place the random prompt into the prompt phrase array
+        all_phrases[0].append(random_prompt)
+
 # Split target images using the pipe character (weights are split later)
 if args.image_prompts:
     args.image_prompts = args.image_prompts.split("|")
@@ -552,7 +572,22 @@ def checkin(i, losses):
     out = synth(z)
     info = PngImagePlugin.PngInfo()
     info.add_text('comment', f'{args.prompts}')
-    TF.to_pil_image(out[0].cpu()).save(args.output, pnginfo=info) 	
+    
+    current_directory = os.getcwd()
+    folders = args.output.split('\\')
+    filename = folders.pop(-1)
+    
+    for folder in folders:
+        current_directory = current_directory + '\\' + folder
+        if not os.path.exists(current_directory):
+            os.mkdir(current_directory)
+    
+    filename = current_directory + "\\" + filename
+    if not args.overwrite:
+        split_output = filename.split('.')
+        filename = split_output[0] + '_' + str(i) +  '.' + split_output[1]
+    
+    TF.to_pil_image(out[0].cpu()).save(filename, pnginfo=info)
 
 
 def ascend_txt():

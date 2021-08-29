@@ -1,0 +1,1 @@
+ACTOR VERB a NOUN at PLACE in TIME
