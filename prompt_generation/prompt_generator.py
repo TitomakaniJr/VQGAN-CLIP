@@ -32,6 +32,12 @@ noun_files = [
     'nouns.txt'
 ]
 
+mediums = []
+medium_dir = "mediums"
+medium_files = [
+    'mediums.txt'
+]
+
 objects = []
 objects_dir = "objects"
 object_files = [
@@ -42,6 +48,12 @@ places = []
 places_dir = "places"
 place_files = [
     'places.txt'
+]
+
+styles = []
+styles_dir = "styles"
+style_files = [
+    'styles.txt'
 ]
 
 times = []
@@ -63,8 +75,10 @@ def InitGenerator():
     ReadWordList(actors_dir, actor_files, actors)
     ReadWordList(adjectives_dir, adjective_files, adjectives)
     ReadWordList(nouns_dir, noun_files, nouns)
+    ReadWordList(medium_dir, medium_files, mediums)
     ReadWordList(objects_dir, object_files, objects)
     ReadWordList(places_dir, place_files, places)
+    ReadWordList(styles_dir, style_files, styles)
     ReadWordList(times_dir, time_files, times)
     ReadWordList(verbs_dir, verb_files, verbs)
 
@@ -87,10 +101,14 @@ def ParseSentence(sentence):
             output += random.choice(adjectives)
         elif word == 'NOUN':
             output += random.choice(nouns)
+        elif word == 'MEDIUM':
+            output += random.choice(mediums)
         elif word == 'OBJECT':
             output += random.choice(objects)
         elif word == 'PLACE':
             output += random.choice(places)
+        elif word == 'STYLE':
+            output += random.choice(styles)
         elif word == 'TIME':
             output += random.choice(times)
         elif word == 'VERB':
