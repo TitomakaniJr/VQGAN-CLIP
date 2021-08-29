@@ -8,4 +8,5 @@ marker drawing
 painting
 pencil art sketch
 photograph
+portrait
 water-color painting

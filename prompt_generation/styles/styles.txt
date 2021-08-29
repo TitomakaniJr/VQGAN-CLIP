@@ -1,5 +1,6 @@
 Art Nouveau
 Camille Pissarro
+charcoal drawing
 Claude Monet
 Edgar Degas
 Edvard Munch
@@ -8,11 +9,13 @@ Futurism
 Impressionism
 Michelangelo Caravaggio
 Modern art
+Neon
+oil paints
 Picasso
 Pop Art
 Sandro Botticelli
 Surreal Art
-oil paints
 strange colours
+vector
 watercolours
 weird bananas
