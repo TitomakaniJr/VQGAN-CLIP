@@ -15,6 +15,7 @@ templates_filename = 'templates.txt'
 actors = []
 actors_dir = "actors\\"
 actor_files = [
+    'celebrities.txt',
     'marvel_main.txt',
     'simpsons.txt',
     'spongebob.txt',
@@ -31,6 +32,12 @@ nouns = []
 nouns_dir = "nouns"
 noun_files = [
     'nouns.txt'
+]
+
+materials = []
+material_dir = "materials"
+material_files = [
+    'materials.txt'
 ]
 
 mediums = []
@@ -104,6 +111,8 @@ def ParseSentence(sentence):
             output += random.choice(nouns)
         elif word == 'MEDIUM':
             output += random.choice(mediums)
+        elif word == 'MATERIAL':
+            output += random.choice(materials)
         elif word == 'OBJECT':
             output += random.choice(objects)
         elif word == 'PLACE':

@@ -1,0 +1,14 @@
+bronze
+canvas
+copper
+denim
+fur
+hair
+linen
+marble
+metal
+quartz
+steel
+stone
+wood
+wool
