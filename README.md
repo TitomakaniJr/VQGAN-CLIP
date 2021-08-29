@@ -187,7 +187,16 @@ Use `random.sh` to make a batch of images from random text. Edit the text and nu
 ## Random Idea Generator
 
 Prompts can include world type tokens which will be parsed and replaced with valid words from a user defined dataset.
-Using -rp you can also add a randomly generated prompt
+Using -rp you can also add a randomly generated prompt to your existing prompt array
+Example Usage:
+
+```sh
+python generate.py -p "ACTOR VERB a ADJECTIVE NOUN" -o Output\Random\random.png
+```
+
+```sh
+python generate.py -rp -o Output\Random\random.png 
+```
 
 ## Advanced options
 
