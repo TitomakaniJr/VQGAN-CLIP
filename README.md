@@ -208,9 +208,10 @@ python generate.py -h
 
 ```sh
 usage: generate.py [-h] [-p PROMPTS] [-ip IMAGE_PROMPTS] [-rp] [-ppfn] [-i MAX_ITERATIONS] [-se DISPLAY_FREQ] [-ow]
-                   [-s SIZE SIZE] [-ii INIT_IMAGE] [-in INIT_NOISE] [-iw INIT_WEIGHT] [-m CLIP_MODEL]
-                   [-conf VQGAN_CONFIG] [-ckpt VQGAN_CHECKPOINT] [-nps [NOISE_PROMPT_SEEDS ...]]
-                   [-npw [NOISE_PROMPT_WEIGHTS ...]] [-lr STEP_SIZE] [-cuts CUTN] [-cutp CUT_POW] [-sd SEED]
+                   [-s SIZE SIZE] [-os OUTPUT_SIZE OUTPUT_SIZE] [-re {Box,Bilinear,Hamming,Bicubic,Lanczos,Nearest}]
+                   [-dre] [-ii INIT_IMAGE] [-in INIT_NOISE] [-iw INIT_WEIGHT] [-m CLIP_MODEL] [-conf VQGAN_CONFIG]
+                   [-ckpt VQGAN_CHECKPOINT] [-nps [NOISE_PROMPT_SEEDS ...]] [-npw [NOISE_PROMPT_WEIGHTS ...]]
+                   [-lr STEP_SIZE] [-cuts CUTN] [-cutp CUT_POW] [-sd SEED]
                    [-opt {Adam,AdamW,Adagrad,Adamax,DiffGrad,AdamP,RAdam,RMSprop}] [-o OUTPUT] [-vid] [-zvid]
                    [-zs ZOOM_START] [-zse ZOOM_FREQUENCY] [-zsc ZOOM_SCALE] [-cpe PROMPT_FREQUENCY] [-vl VIDEO_LENGTH]
                    [-ofps OUTPUT_VIDEO_FPS] [-ifps INPUT_VIDEO_FPS] [-d]
@@ -235,6 +236,12 @@ optional arguments:
   -ow, --overwrite      Overwrite previous image iterations
   -s SIZE SIZE, --size SIZE SIZE
                         Image size (width height) (default: [318, 318])
+  -os OUTPUT_SIZE OUTPUT_SIZE, --output_size OUTPUT_SIZE OUTPUT_SIZE
+                        Output image size (width height) (default: [318, 318])
+  -re {Box,Bilinear,Hamming,Bicubic,Lanczos,Nearest}, --resampler {Box,Bilinear,Hamming,Bicubic,Lanczos,Nearest}
+                        Image resampler to use during output resizing
+  -dre, --debug_resampler
+                        Debug each image resampler
   -ii INIT_IMAGE, --init_image INIT_IMAGE
                         Initial image
   -in INIT_NOISE, --init_noise INIT_NOISE

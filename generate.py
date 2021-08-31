@@ -66,6 +66,9 @@ vq_parser.add_argument("-i",    "--iterations", type=int, help="Number of iterat
 vq_parser.add_argument("-se",   "--save_every", type=int, help="Save image iterations", default=50, dest='display_freq')
 vq_parser.add_argument("-ow",   "--overwrite", action='store_false', help="Overwrite previous image iterations", dest='overwrite')
 vq_parser.add_argument("-s",    "--size", nargs=2, type=int, help="Image size (width height) (default: %(default)s)", default=[default_image_size,default_image_size], dest='size')
+vq_parser.add_argument("-os",    "--output_size", nargs=2, type=int, help="Output image size (width height) (default: %(default)s)", default=[default_image_size,default_image_size], dest='output_size')
+vq_parser.add_argument("-re",    "--resampler", type=str, help="Image resampler to use during output resizing", choices=['Box','Bilinear','Hamming','Bicubic','Lanczos','Nearest'], default='Lanczos', dest='resampler')
+vq_parser.add_argument("-dre",    "--debug_resampler", action='store_true', help="Debug each image resampler", default=None, dest='debug_resamplers')
 vq_parser.add_argument("-ii",   "--init_image", type=str, help="Initial image", default=None, dest='init_image')
 vq_parser.add_argument("-in",   "--init_noise", type=str, help="Initial noise image (pixels or gradient)", default=None, dest='init_noise')
 vq_parser.add_argument("-iw",   "--init_weight", type=float, help="Initial weight", default=0., dest='init_weight')
@@ -79,7 +82,7 @@ vq_parser.add_argument("-cuts", "--num_cuts", type=int, help="Number of cuts", d
 vq_parser.add_argument("-cutp", "--cut_power", type=float, help="Cut power", default=1., dest='cut_pow')
 vq_parser.add_argument("-sd",   "--seed", type=int, help="Seed", default=None, dest='seed')
 vq_parser.add_argument("-opt",  "--optimiser", type=str, help="Optimiser", choices=['Adam','AdamW','Adagrad','Adamax','DiffGrad','AdamP','RAdam','RMSprop'], default='Adam', dest='optimiser')
-vq_parser.add_argument("-o",    "--output", type=str, help="Output file", default="output.png", dest='output')
+vq_parser.add_argument("-o",    "--output", type=str, help="Output file", default="Output\output.png", dest='output')
 vq_parser.add_argument("-vid",  "--video", action='store_true', help="Create video frames?", dest='make_video')
 vq_parser.add_argument("-zvid", "--zoom_video", action='store_true', help="Create zoom video?", dest='make_zoom_video')
 vq_parser.add_argument("-zs",   "--zoom_start", type=int, help="Zoom start iteration", default=0, dest='zoom_start')
@@ -95,6 +98,19 @@ vq_parser.add_argument("-cd",   "--cuda_device", type=str, help="Cuda device to 
 
 # Execute the parse_args() method
 args = vq_parser.parse_args()
+
+if args.resampler == "Box":
+    resampler = Image.BOX
+elif args.resampler == "Bilinear":
+    resampler = Image.BILINEAR
+elif args.resampler == "Hamming":
+    resampler = Image.HAMMING
+elif args.resampler == "Bicubic":
+    resampler = Image.BICUBIC
+elif args.resampler == "Lanczos":
+    resampler = Image.LANCZOS
+elif args.resampler == "Nearest":
+    resampler = Image.NEAREST
 
 if args.cudnn_determinism:
    torch.backends.cudnn.deterministic = True
@@ -589,6 +605,24 @@ def synth(z):
         z_q = vector_quantize(z.movedim(1, 3), model.quantize.embedding.weight).movedim(3, 1)
     return clamp_with_grad(model.decode(z_q).add(1).div(2), 0, 1)
 
+def debug_resamplers(image, info):
+    temp = image.resize((args.output_size[0], args.output_size[1]), Image.BOX)
+    temp.save(os.path.join(os.getcwd(), "Output\\resample_box.png"), pnginfo=info, qaulity=100)
+    
+    temp = image.resize((args.output_size[0], args.output_size[1]), Image.BILINEAR)
+    temp.save(os.path.join(os.getcwd(), "Output\\resample_bilinear.png"), pnginfo=info, qaulity=100)
+    
+    temp = image.resize((args.output_size[0], args.output_size[1]), Image.HAMMING)
+    temp.save(os.path.join(os.getcwd(), "Output\\resample_hamming.png"), pnginfo=info, qaulity=100)
+    
+    temp = image.resize((args.output_size[0], args.output_size[1]), Image.BICUBIC)
+    temp.save(os.path.join(os.getcwd(), "Output\\resample_bicubic.png"), pnginfo=info, qaulity=100)
+    
+    temp = image.resize((args.output_size[0], args.output_size[1]), Image.LANCZOS)
+    temp.save(os.path.join(os.getcwd(), "Output\\resample_lanczos.png"), pnginfo=info, qaulity=100)
+    
+    temp = image.resize((args.output_size[0], args.output_size[1]), Image.NEAREST)
+    temp.save(os.path.join(os.getcwd(), "Output\\resample_nearest.png"), pnginfo=info, qaulity=100)
 
 @torch.no_grad()
 def checkin(i, losses):
@@ -597,7 +631,15 @@ def checkin(i, losses):
     out = synth(z)
     info = PngImagePlugin.PngInfo()
     info.add_text('comment', f'{args.prompts}')
-    TF.to_pil_image(out[0].cpu()).save(filename, pnginfo=info)
+    checkin_image = TF.to_pil_image(out[0].cpu())
+    
+    if args.debug_resamplers:
+        debug_resamplers(checkin_image, info)
+    
+    if not args.size == args.output_size:
+        checkin_image = checkin_image.resize((args.output_size[0], args.output_size[1]), resampler)
+        
+    checkin_image.save(filename, pnginfo=info, qaulity=100)
 
 
 def ascend_txt():
