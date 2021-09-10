@@ -7,8 +7,10 @@ fractal
 hieroglyphic
 illustration
 marker drawing
+mandelbrot
 painting
 pencil art sketch
 photograph
 portrait
-water-color painting
+recursive
+watercolor painting
